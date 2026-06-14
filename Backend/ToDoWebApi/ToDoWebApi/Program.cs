@@ -1,5 +1,11 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using ToDoApp.Core.Interfaces;
+using ToDoApp.Core.Services;
 using ToDoApp.Storage;
 
 namespace ToDoWebApi
@@ -15,12 +21,79 @@ namespace ToDoWebApi
             builder.Services.AddDbContext<ToDoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add services to the container.
+            // --- НАЛАШТУВАННЯ JWT АВТЕНТИФІКАЦІЇ ---
+            // 1. Витягуємо секретний ключ з конфігурації (appsettings.json або User Secrets)
+            var jwtSecret = builder.Configuration["JwtSettings:Secret"];
+            if (string.IsNullOrEmpty(jwtSecret))
+            {
+                throw new Exception("JWT Secret key is missing in configuration!");
+            }
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
+
+            // 2. Підключаємо схему автентифікації JwtBearer
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false; // Для локальної розробки можна false
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JwtSettings:Audience"],
+
+                    ValidateLifetime = true, // Перевіряти, чи не збіг термін дії токена
+                    ClockSkew = TimeSpan.Zero // Прибираємо затримку часу при перевірці токена
+                };
+            });
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IToDoService, ToDoService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoApp API", Version = "v1" });
+
+                // 1. Описуємо схему автентифікації (як саме передається токен)
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Введіть JWT токен у форматі: Bearer {твій_токен}"
+                });
+
+                // 2. Робимо так, щоб Swagger вимагав токен для захищених ендпоінтів
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+            });
 
             var app = builder.Build();
 
@@ -32,6 +105,8 @@ namespace ToDoWebApi
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

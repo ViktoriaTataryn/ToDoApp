@@ -12,6 +12,6 @@ namespace ToDoApp.Core.Interfaces
         Task<ToDoTaskDto> AddTaskAsync(int userId, AddTaskDto addTaskDto, CancellationToken cancellationToken = default);
         Task<IEnumerable<ToDoTaskDto>> GetTasksAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
         Task<ToDoTaskDto> UpdateTaskAsync(int userId, int taskId, UpdateTaskDto updateTaskDto, CancellationToken cancellationToken = default);
-        Task<bool> DeleteTaskAsync(int userId, int taskId, CancellationToken cancellationToken = default);
+        Task DeleteTaskAsync(int userId, int taskId, CancellationToken cancellationToken = default);
     }
 }
