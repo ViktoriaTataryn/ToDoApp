@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ToDoApp.Core\ToDoApp.Core.csproj" />
     <ProjectReference Include="..\ToDoApp.Entities\ToDoApp.Entities.csproj" />
     <ProjectReference Include="..\ToDoApp.Storage\ToDoApp.Storage.csproj" />

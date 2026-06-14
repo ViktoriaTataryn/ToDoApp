@@ -10,8 +10,8 @@ namespace ToDoApp.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> RegisterAsync(RegisterUserDto registerUserDTO, CancellationToken cancelationToken = default);
-        Task<string> LoginAsync(string email, string password, CancellationToken cancelationToken = default);
-        Task<string> LogoutAsync( CancellationToken cancelationToken = default);
+        Task<UserDto> RegisterAsync(RegisterUserDto registerUserDTO, CancellationToken cancelationToken = default);
+        Task<AuthResultDto> LoginAsync(LoginDto loginDto, CancellationToken cancelationToken = default);
+       
     }
 }

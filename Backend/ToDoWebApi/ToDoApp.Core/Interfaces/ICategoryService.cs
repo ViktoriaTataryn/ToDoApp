@@ -8,10 +8,10 @@ using ToDoApp.Entities.Models;
 
 namespace ToDoApp.Core.Interfaces
 {
-    public interface ICategory
+    public interface ICategoryService
     {
         Task<CategoryDto> AddCategoryAsync(int userId, AddCategoryDto addCategoryDto, CancellationToken cancellationToken = default);
-        Task<IEnumerable<CategoryDto>> GetCategoriesAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
-        Task<bool> DeleteCategoryAsync(int userId, int taskId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<CategoryDto>> GetCategoriesAsync(int userId,  CancellationToken cancellationToken = default);
+        Task DeleteCategoryAsync(int userId, int categoryId, CancellationToken cancellationToken = default);
     }
 }
