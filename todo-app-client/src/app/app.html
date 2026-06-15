@@ -1,0 +1,19 @@
+<div class="app-container">
+  <header class="header">
+    <h1>Todo App</h1>
+   <button class="avatar-button" (click)="logout()" title="Вийти">
+    <i class="bi bi-box-arrow-right" style="font-size: 20px; color: white;"></i>
+  </button>
+  </header>
+
+  <aside class="sidebar">
+    <nav>
+      <a routerLink="/todos" routerLinkActive="active">Мої завдання</a>
+      <a routerLink="/categories" routerLinkActive="active">Категорії</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

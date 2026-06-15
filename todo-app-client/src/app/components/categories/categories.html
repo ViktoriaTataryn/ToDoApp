@@ -1,0 +1,15 @@
+<div class="categories-page">
+  <h2>Керування категоріями</h2>
+
+  <form [formGroup]="categoryForm" (ngSubmit)="addCategory()" class="cat-form">
+    <input type="text" formControlName="name" placeholder="Назва нової категорії">
+    <button type="submit" [disabled]="categoryForm.invalid">Додати</button>
+  </form>
+
+  <div class="cat-list">
+    <div *ngFor="let cat of categories" class="cat-item">
+      <span>{{ cat.name }}</span>
+      <button (click)="deleteCategory(cat.id)" class="delete-btn">Видалити</button>
+    </div>
+  </div>
+</div>
