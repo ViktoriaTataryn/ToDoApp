@@ -1,0 +1,376 @@
+.todo-page {
+  display: flex;
+  max-width: 1200px;
+  margin: 40px auto;
+  gap: 30px;
+  padding: 0 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.todo-sidebar {
+  flex: 1;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  height: fit-content;
+}
+
+.todo-content {
+  flex: 2;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+h2 {
+  margin-top: 0;
+  color: #0f172a;
+  margin-bottom: 13px;
+  font-size: 26px;         /* Оптимальний розмір для головного екрану */
+  font-weight: 700;         /* Робимо його трішки виразнішим */
+  letter-spacing: -0.5px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  height: 80px;
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Список тасок */
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* .todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-left: 5px solid #007bff;
+  border-radius: 6px;
+  background: #fafafa;
+  transition: all 0.2s;
+} */
+ .todo-item {
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #f3f4f6; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  color: #1e293b;
+  /* 🔥 Цей рядок відповідає за плавність ВСІХ змін (рух, колір, прозорість) */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+  
+  position: relative;
+  overflow: hidden;
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Тінь посилюється при наведенні */
+}
+
+.todo-item.important {
+  border-left-color: #ffc107;
+  background: #fffdf5;
+}
+
+.todo-item.completed {
+background: #f9fafb; /* Стає сірішим */
+  border-color: #e5e7eb;
+  opacity: 0.65; /* Трохи прозоре, щоб не відволікати увагу */
+  box-shadow: none;
+}
+.todo-item.completed .todo-title {
+  text-decoration: line-through;
+  color: #9ca3af; /* Сірий колір тексту */
+  transition: all 0.3s ease;
+}
+
+
+
+.todo-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.todo-left input[type="checkbox"] {
+  margin-top: 5px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.todo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-title {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.todo-desc {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.todo-date {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.todo-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.delete-btn:hover {
+  background: #f0f0f0;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #888;
+  padding: 4px;
+}
+
+/* Загальний стиль для кнопок-іконок */
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 18px; /* Розмір іконки */
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Кольори для конкретних кнопок */
+.complete-btn {
+  color: #10b981; /* Зелений */
+}
+.complete-btn:hover {
+  background: #f0fdf4;
+}
+
+.important-btn {
+  color: #f59e0b; /* Помаранчевий */
+}
+.important-btn:hover {
+  background: #fffbeb;
+}
+
+.delete-btn {
+  color: #ef4444; /* Червоний */
+}
+.delete-btn:hover {
+  background: #fef2f2;
+}
+
+/* Шапка сторінки з кнопкою */
+.todo-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.add-task-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  transition: all 0.2s;
+}
+
+.add-task-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}
+
+/* Напівпрозоре темне тло для модалки */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.3); /* Темний відтінок */
+  backdrop-filter: blur(4px); /* Ефект розмиття фону */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Біла картка форми всередині модалки */
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: scaleUp 0.2s ease-out; /* Плавна поява */
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.close-modal-btn:hover {
+  color: #1f2937;
+  background: #f3f4f6;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* Анімація збільшення вікна при появі */
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item {
+  animation: slideIn 0.3s ease-out;
+}
