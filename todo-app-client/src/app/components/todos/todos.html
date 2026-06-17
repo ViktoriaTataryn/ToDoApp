@@ -1,140 +1,206 @@
-<!-- <div class="todo-page">
-  <div class="todo-sidebar">
-    <h2>Нове завдання</h2>
-    <form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-     
-        <input type="text" formControlName="title" placeholder="Що потрібно зробити?">
+
+<div class="todo-page">
+  
+  <aside class="todo-sidebar">
+    <nav class="sidebar-nav">
+      <a routerLink="/todos" routerLinkActive="active" class="menu-item main-link">
+        <i class="bi bi-check2-square"></i> Мої завдання
+      </a>
+
+      <div class="sub-menu">
+        <div class="sub-item" [ngClass]="{'active-filter': currentFilter === 'all'}" (click)="changeFilter('all')">
+          <i class="bi bi-house-door"></i> <span>Усі</span>
+        </div>
+        
+        <div class="sub-item" [ngClass]="{'active-filter': currentFilter === 'important'}" (click)="changeFilter('important')">
+          <i class="bi bi-star"></i> <span>Важливі</span>
+        </div>
+        
+        <div class="sub-item" [ngClass]="{'active-filter': currentFilter === 'planned'}" (click)="changeFilter('planned')">
+          <i class="bi bi-calendar3"></i> <span>Заплановані</span>
+        </div>
       </div>
 
-      <div class="form-group">
-    
-        <textarea formControlName="description" placeholder="Додаткові деталі..."></textarea>
-      </div>
+      <div class="sidebar-divider"></div>
 
-      <div class="form-group">
-        <label>Термін виконання </label>
-        <input type="date" formControlName="dueDate">
-      </div>
-<div class="form-group">
-  <label>Категорія</label>
-  <select formControlName="categoryId">
-    <option value="">Без категорії</option>
-    <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-  </select>
-</div>
-      <div class="form-group checkbox-group">
-        <label>
-          <input type="checkbox" formControlName="isImportant"> ⭐ Важливе завдання
-        </label>
-      </div>
+ 
 
-
-      <button type="submit" [disabled]="todoForm.invalid">Додати завдання</button>
-    </form>
+<div class="sidebar-categories">
+  <div class="categories-header">
+    <span class="categories-title">Категорії</span>
+    <button class="add-category-btn" (click)="openAddCategoryModal()" title="Створити категорію">
+      <i class="bi bi-plus-lg"></i>
+    </button>
   </div>
+  
+  <div class="category-search-wrapper" style="padding: 0 8px; margin-bottom: 10px;">
+    <div class="input-group input-group-sm">
+      <span class="input-group-text bg-transparent border-end-0 text-muted" style="border-color: #e2e8f0;">
+        <i class="bi bi-search" style="font-size: 12px;"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control form-control-sm border-start-0" 
+        style="border-color: #e2e8f0; font-size: 13px; box-shadow: none;"
+        placeholder="Пошук категорії..." 
+        [(ngModel)]="categorySearchQuery"
+      />
+    </div>
+  </div>
+  
+  <div class="categories-list">
+    <div *ngIf="filteredCategories && filteredCategories.length === 0" style="padding-left: 8px; color: #94a3b8; font-size: 13px;">
+      Нічого не знайдено
+    </div>
+
+    <button 
+      *ngFor="let cat of filteredCategories" 
+      [class.active]="currentFilter === (cat.id || cat.Id)?.toString()" 
+      (click)="changeFilter(cat.id || cat.Id)"
+      class="category-item"
+    >
+      <i class="bi bi-tag-fill" style="color: #3b82f6;"></i>
+      <span class="category-name">{{ cat.title || cat.Title }}</span>
+
+       <span class="category-count">
+        {{ getCategoryCount(cat.id) }}
+      </span>
+    </button>
+  </div>
+</div>
+
+    </nav>
+  </aside>
 
   <div class="todo-content">
-    <h2>Мої завдання</h2>
-    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
-    <p *ngIf="todos.length === 0" class="empty-msg">Список завдань порожній. Час відпочити! ☕</p>
+    <div class="todo-page-header">
+      <h2 >{{ currentFilterTitle }}</h2>
+      <button class="add-task-btn" (click)="openModal()">
+        <i class="bi bi-plus-lg"></i> Нове завдання
+      </button>
+    </div>
 
-    <div class="todo-list">
-      <div *ngFor="let todo of todos" class="todo-item" [ngClass]="{'completed': todo.isCompleted, 'important': todo.isImportant}">
+    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+    <p *ngIf="filteredTodos.length === 0" class="empty-msg">Список завдань порожній</p>
+
+    <div class="todo-list" *ngIf="filteredTodos.length > 0">
+      <div *ngFor="let todo of filteredTodos" class="todo-item" [ngClass]="{'completed': todo.isCompleted, 'important': todo.isImportant}">
+        
         <div class="todo-left">
           <input type="checkbox" [checked]="todo.isCompleted" (change)="toggleComplete(todo)">
           <div class="todo-text">
             <span class="todo-title">{{ todo.title }}</span>
             <p *ngIf="todo.description" class="todo-desc">{{ todo.description }}</p>
-            <span *ngIf="todo.dueDate" class="todo-date">📅 До: {{ todo.dueDate | date:'dd.MM.yyyy' }}</span>
+           <span *ngIf="todo.dueDate" class="todo-date">
+  <i class="bi bi-calendar-event" style="font-size: 13px;"></i> 
+  До: {{ todo.dueDate | date:'dd.MM.yyyy' }}
+</span>
           </div>
         </div>
-      <div class="todo-actions">
-  <button (click)="toggleComplete(todo)" class="action-btn complete-btn" title="Виконано">
-    <i class="bi" [ngClass]="todo.isCompleted ? 'bi-check-circle-fill' : 'bi-circle'"></i>
-  </button>
 
-  <button (click)="toggleImportant(todo)" class="action-btn important-btn" title="Важливе">
-    <i class="bi" [ngClass]="todo.isImportant ? 'bi-star-fill' : 'bi-star'"></i>
-  </button>
+        <div class="todo-right">
+          <button (click)="toggleImportant(todo)" class="action-btn important-btn">
+            <i class="bi" [ngClass]="todo.isImportant ? 'bi-star-fill' : 'bi-star'"></i>
+          </button>
+          <button class="action-btn delete-btn" (click)="deleteTodo(todo.id)">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
 
-  <button (click)="deleteTodo(todo.id)" class="action-btn delete-btn" title="Видалити">
-    <i class="bi bi-trash3"></i>
-  </button>
-</div>
       </div>
     </div>
+  </div> <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+      
+        <h3>Створити нове завдання</h3>
+  <button class="close-modal-btn" (click)="closeModal()">
+    <i class="bi bi-x-lg"></i>
+  </button>
+</div>
+
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label class="form-label">Що потрібно зробити? *</label>
+    <div class="input-wrapper">
+      <i class="bi bi-pencil-square input-icon"></i>
+      <input type="text" formControlName="title" placeholder="Наприклад: Підготувати звіт">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Деталі (необов'язково)</label>
+    <textarea formControlName="description" placeholder="Додайте опис або нотатки до цього завдання..."></textarea>
+  </div>
+<div class="form-group">
+  <label class="form-label">Крайній термін</label>
+  <div class="input-wrapper">
+    <i class="bi bi-calendar-week input-icon"></i>
+    <input type="date" formControlName="dueDate">
   </div>
 </div>
 
- -->
-
- <div class="todo-page-header">
-  <h2>Мої завдання</h2>
-  <button class="add-task-btn" (click)="openModal()">
-    <i class="bi bi-plus-lg"></i> Нове завдання
-  </button>
+<div class="form-group">
+  <label class="form-label">Категорія завдання</label>
+  <div class="input-wrapper">
+    <i class="bi bi-tags input-icon"></i>
+    <select formControlName="categoryId" class="form-control">
+      <option [value]="null">Без категорії</option>
+      
+      <option *ngFor="let cat of categories" [value]="cat.id || cat.Id">
+        {{ cat.title || cat.Title }}
+      </option>
+    </select>
+  </div>
+</div>
+     
+        <div class="form-group checkbox-group">
+  <label class="important-toggle">
+    <input type="checkbox" formControlName="isImportant" id="isImportant">
+    
+    <span class="toggle-button">
+      <i class="bi bi-star icon-empty"></i>
+      <i class="bi bi-star-fill icon-filled"></i>
+      <span>Важливе завдання</span>
+    </span>
+  </label>
 </div>
 
-<p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
-<p *ngIf="todos.length === 0" class="empty-msg">Список завдань порожній. Час відпочити! ☕</p>
-
-<div class="todo-list">
-  <!-- <div *ngFor="let todo of todos" class="todo-item" [ngClass]="{'completed': todo.isCompleted, 'important': todo.isImportant}"> -->
-    <div *ngFor="let todo of todos" class="todo-item" [ngClass]="{'completed': todo.isCompleted, 'important': todo.isImportant}">
-    <div class="todo-left">
-      <input type="checkbox" [checked]="todo.isCompleted" (change)="toggleComplete(todo)">
-      <div class="todo-text">
-        <span class="todo-title">{{ todo.title }}</span>
-        <p *ngIf="todo.description" class="todo-desc">{{ todo.description }}</p>
-        <span *ngIf="todo.dueDate" class="todo-date">📅 До: {{ todo.dueDate | date:'dd.MM.yyyy' }}</span>
-      </div>
+        <button type="submit" [disabled]="todoForm.invalid" class="submit-btn">Додати</button>
+      </form>
     </div>
-    <div class="todo-right">
-      <button (click)="toggleImportant(todo)" class="action-btn important-btn">
-        <i class="bi" [ngClass]="todo.isImportant ? 'bi-star-fill' : 'bi-star'"></i>
+  </div>
+
+  <div class="category-overlay" *ngIf="isCategoryModalOpen" (click)="closeCategoryModal()">
+  <div class="category-card" (click)="$event.stopPropagation()">
+    
+    <div class="category-header">
+      <h3>Нова категорія</h3>
+      <button class="category-close-btn" (click)="closeCategoryModal()">
+        <i class="bi bi-x-lg"></i>
       </button>
-      <button class="action-btn delete-btn" (click)="deleteTodo(todo.id)">
-        <i class="bi bi-trash3"></i>
-      </button>
     </div>
+
+    <div class="form-group" style="margin: 0;">
+      <label class="form-label">Назва категорії *</label>
+      <div class="input-wrapper">
+        <i class="bi bi-tag input-icon"></i>
+        <input 
+          type="text" 
+          #catInput 
+          placeholder="Наприклад: Навчання, Спорт, Особисте"
+          (keyup.enter)="submitCategory(catInput.value)"
+        >
+      </div>
+      <div class="error-text" *ngIf="categoryErrorMessage">{{ categoryErrorMessage }}</div>
+    </div>
+
+    <div class="category-actions">
+      <button class="btn btn-secondary" (click)="closeCategoryModal()">Скасувати</button>
+      <button class="btn btn-primary" (click)="submitCategory(catInput.value)">Створити</button>
+    </div>
+
   </div>
 </div>
 
-<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>Створити нове завдання</h3>
-      <button class="close-modal-btn" (click)="closeModal()"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input type="text" formControlName="title" placeholder="Назва завдання *">
-      </div>
-
-      <div class="form-group">
-        <textarea formControlName="description" placeholder="Опис завдання (необов'язково)"></textarea>
-      </div>
-
-      <div class="form-group">
-        <input type="date" formControlName="dueDate">
-      </div>
-
-      <div class="form-group">
-       <select formControlName="categoryId">
-  <option [value]="''">Оберіть категорію</option> 
-  <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-</select>
-      </div>
-
-      <div class="form-group checkbox-group">
-        <label>
-          <input type="checkbox" formControlName="isImportant"> ⭐ Позначити як важливе
-        </label>
-      </div>
-
-      <button type="submit" [disabled]="todoForm.invalid" class="submit-btn">Додати</button>
-    </form>
-  </div>
 </div>

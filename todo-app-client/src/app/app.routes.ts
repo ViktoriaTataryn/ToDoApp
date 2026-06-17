@@ -11,6 +11,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'todos', component: TodosComponent },
   { path: 'categories', component: CategoriesComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Якщо просто localhost:4200, перекидає на логін
-  { path: '**', redirectTo: '/login' } // Якщо ввели неіснуючу адресу, теж перекидає на логін
+  { path: '', redirectTo: '/login', pathMatch: 'full' }, 
+  { path: '**', redirectTo: '/login' } 
 ];

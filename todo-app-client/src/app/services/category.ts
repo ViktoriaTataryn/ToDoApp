@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 // services/category.ts
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private apiUrl = 'https://localhost:7001/api/categories'; // Зміни на свій URL
+  private apiUrl = 'https://localhost:7197/category'; 
 
   constructor(private http: HttpClient) {}
 
   getCategories() { return this.http.get<any[]>(this.apiUrl, { headers: this.getAuthHeaders() }); }
-  createCategory(cat: { name: string }) { return this.http.post(this.apiUrl, cat, { headers: this.getAuthHeaders() }); }
+  createCategory(cat: { title: string }) { return this.http.post(this.apiUrl, cat, { headers: this.getAuthHeaders() }); }
   deleteCategory(id: number) { return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() }); }
 
   private getAuthHeaders() {

@@ -11,7 +11,7 @@ export interface AuthResponse {
   providedIn: 'root' // Сервіс буде доступний у всьому додатку
 })
 export class AuthService {
-  // 🔥 ЗАМІНИ ПОРТ (7001) на той, на якому реально запускається твій .NET Swagger!
+
   private apiUrl = 'https://localhost:7197/api/auth'; 
 
   constructor(private http: HttpClient) { }

@@ -17,7 +17,7 @@ export interface TodoItem {
   providedIn: 'root'
 })
 export class TodoService {
-  // 🔥 ЗАМІНИ ПОРТ на свій правильний порт .NET бекенду!
+ 
   private apiUrl = 'https://localhost:7197/api/tasks'; 
 
   constructor(private http: HttpClient) { }
