@@ -91,6 +91,7 @@ namespace ToDoApp.Core.Services
                 CreatedAt = x.CreatedAt,
                 DueDate = x.DueDate,
                 CategoryTitle = x.Category != null ? x.Category.Title : null,
+                CategoryId = x.CategoryId,
             }).ToListAsync(cancellationToken);
 
         }
@@ -108,6 +109,7 @@ namespace ToDoApp.Core.Services
             task.Description = updateTaskDto.Description;
             task.IsImportant = updateTaskDto.IsImportant;
             task.DueDate = updateTaskDto.DueDate;
+            task.IsCompleted = updateTaskDto.IsCompleted;
             task.CategoryId = updateTaskDto.CategoryId;
 
            await _context.SaveChangesAsync(cancellationToken);

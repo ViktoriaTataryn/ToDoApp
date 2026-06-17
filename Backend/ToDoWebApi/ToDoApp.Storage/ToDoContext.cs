@@ -43,7 +43,7 @@ namespace ToDoApp.Storage
                 .HasOne(t => t.Category)
                 .WithMany(c => c.Tasks)
                 .HasForeignKey(t => t.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull); // Категорію видалили -> таска залишилась без категорії
+                .OnDelete(DeleteBehavior.SetNull); 
         }
     }
 }

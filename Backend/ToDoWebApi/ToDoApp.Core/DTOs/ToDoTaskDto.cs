@@ -20,5 +20,6 @@ namespace ToDoApp.Core.DTOs
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public string? CategoryTitle { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

@@ -22,7 +22,6 @@ namespace ToDoWebApi
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // --- НАЛАШТУВАННЯ JWT АВТЕНТИФІКАЦІЇ ---
-            // 1. Витягуємо секретний ключ з конфігурації (appsettings.json або User Secrets)
             var jwtSecret = builder.Configuration["JwtSettings:Secret"];
             if (string.IsNullOrEmpty(jwtSecret))
             {
@@ -38,7 +37,7 @@ namespace ToDoWebApi
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false; // Для локальної розробки можна false
+                options.RequireHttpsMetadata = false; 
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -67,7 +66,7 @@ namespace ToDoWebApi
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoApp API", Version = "v1" });
 
-                // 1. Описуємо схему автентифікації (як саме передається токен)
+             
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -78,7 +77,7 @@ namespace ToDoWebApi
                     Description = "Введіть JWT токен у форматі: Bearer {твій_токен}"
                 });
 
-                // 2. Робимо так, щоб Swagger вимагав токен для захищених ендпоінтів
+              
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -94,6 +93,15 @@ namespace ToDoWebApi
         }
     });
             });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AngularClient", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // Адреса  Angular додатка
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
 
             var app = builder.Build();
 
@@ -105,6 +113,8 @@ namespace ToDoWebApi
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AngularClient");
 
             app.UseAuthentication();
 

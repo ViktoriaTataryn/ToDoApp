@@ -16,5 +16,6 @@ namespace ToDoApp.Core.DTOs
 
         public int? CategoryId { get; set; }
         public string? CategoryTitle { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }

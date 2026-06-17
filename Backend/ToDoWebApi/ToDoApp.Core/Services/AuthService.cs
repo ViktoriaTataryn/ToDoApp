@@ -92,12 +92,12 @@ namespace ToDoApp.Core.Services
             // Беремо ключ з нашого appsettings.json
             var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]);
 
-            // Описуємо "Клейми" (Claims) — інформацію всередині токена, яку зможе прочитати фронтенд
+           
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // Зашиваємо ID юзера!
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), 
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("FullName", $"{user.FirstName} {user.LastName}")
             }),

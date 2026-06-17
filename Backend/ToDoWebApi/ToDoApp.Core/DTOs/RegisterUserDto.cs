@@ -19,7 +19,7 @@ namespace ToDoApp.Core.DTOs
         [EmailAddress(ErrorMessage = "Некоректний формат Email адреси")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Пароль є обов'язковим")]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "Пароль має бути не менше 6 символів")]
+     
         public string PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
